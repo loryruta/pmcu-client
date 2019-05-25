@@ -121,3 +121,28 @@ class PMCUClient:
 
     def disconnect(self):
         self.mqtt_client.disconnect()
+
+
+if __name__ == "__main__":
+    import sys
+    import random
+    import json
+
+    if len(sys.argv) < 2:
+        print("IP address not specified!")
+        exit()
+
+    print("IP address selected: \"%s:1883\"" % sys.argv[1])
+
+    measurement_id = 0
+
+
+    def __on_measurement(message):
+        global measurement_id
+        print("Measurement (%d):" % measurement_id)
+        print(json.dumps(message, indent=4))
+        measurement_id += 1
+
+
+    client = PMCUClient(__on_measurement)
+    client.listen(sys.argv[1])
